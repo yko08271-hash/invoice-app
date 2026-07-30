@@ -184,12 +184,24 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">支払期限（任意）</label>
-          <input
-            type="date"
-            value={dueDate ?? ''}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+          <div className="flex gap-2">
+            <input
+              type="date"
+              value={dueDate ?? ''}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {dueDate && (
+              <button
+                type="button"
+                onClick={() => setDueDate('')}
+                className="text-gray-400 hover:text-red-600 text-sm px-2 shrink-0"
+                aria-label="支払期限をクリア"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
         <div className="flex gap-2">
           <div className="flex-1">
@@ -252,12 +264,24 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
               <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">日付</label>
-                  <input
-                    type="date"
-                    value={item.item_date ?? ''}
-                    onChange={(e) => updateItem(index, { item_date: e.target.value || null })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <div className="flex gap-1">
+                    <input
+                      type="date"
+                      value={item.item_date ?? ''}
+                      onChange={(e) => updateItem(index, { item_date: e.target.value || null })}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                    {item.item_date && (
+                      <button
+                        type="button"
+                        onClick={() => updateItem(index, { item_date: null })}
+                        className="text-gray-400 hover:text-red-600 text-sm px-1 shrink-0"
+                        aria-label="日付をクリア"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs text-gray-500 mb-1">品目</label>
