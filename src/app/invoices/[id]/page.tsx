@@ -4,6 +4,7 @@ import Link from 'next/link';
 import AppHeader from '@/components/AppHeader';
 import InvoicePrintView from '@/components/InvoicePrintView';
 import PdfExportButton from '@/components/PdfExportButton';
+import { invoicePdfFileName } from '@/lib/calc';
 import type { CompanySettings, Invoice, InvoiceItem } from '@/lib/types';
 
 export default async function ViewInvoicePage({ params }: { params: Promise<{ id: string }> }) {
@@ -39,7 +40,7 @@ export default async function ViewInvoicePage({ params }: { params: Promise<{ id
               編集
             </Link>
           </div>
-          <PdfExportButton fileName={`請求書_${invoice.invoice_number}.pdf`} />
+          <PdfExportButton fileName={invoicePdfFileName(invoice.issue_date, invoice.client_name)} />
         </div>
 
         <div className="overflow-x-auto pb-4">
