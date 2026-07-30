@@ -30,9 +30,9 @@ export function formatYen(amount: number): string {
   return `¥${amount.toLocaleString('ja-JP')}`;
 }
 
-export function invoicePdfFileName(issueDate: string, clientName: string): string {
+export function invoicePdfFileName(issueDate: string, clientName: string, honorific: string): string {
   const dateStr = issueDate.replaceAll('-', '');
   // ファイル名に使えない文字を除去
   const safeClientName = clientName.replace(/[\\/:*?"<>|]/g, '');
-  return `ご請求書_${dateStr}_${safeClientName}.pdf`;
+  return `ご請求書_${dateStr}_${safeClientName}${honorific}.pdf`;
 }

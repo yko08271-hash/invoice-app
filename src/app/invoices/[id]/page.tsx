@@ -40,7 +40,9 @@ export default async function ViewInvoicePage({ params }: { params: Promise<{ id
               編集
             </Link>
           </div>
-          <PdfExportButton fileName={invoicePdfFileName(invoice.issue_date, invoice.client_name)} />
+          <PdfExportButton
+            fileName={invoicePdfFileName(invoice.issue_date, invoice.client_name, invoice.honorific)}
+          />
         </div>
 
         <div className="overflow-x-auto pb-4">
