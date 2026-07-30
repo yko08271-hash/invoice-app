@@ -222,8 +222,8 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
               onChange={(e) => setHonorific(e.target.value as Honorific)}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <option value="御中">御中</option>
               <option value="様">様</option>
+              <option value="御中">御中</option>
             </select>
           </div>
         </div>
