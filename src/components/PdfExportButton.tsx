@@ -17,7 +17,8 @@ export default function PdfExportButton({ fileName }: { fileName: string }) {
       if (!element) return;
 
       const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#ffffff' });
-      const imgData = canvas.toDataURL('image/png');
+      // PNGは文字のアンチエイリアスにより圧縮効率が悪く容量が大きくなるため、JPEGで書き出す
+      const imgData = canvas.toDataURL('image/jpeg', 0.85);
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -29,12 +30,12 @@ export default function PdfExportButton({ fileName }: { fileName: string }) {
       let heightLeft = imgHeight - pageHeight;
       let position = 0;
 
-      pdf.addImage(imgData, 'PNG', 0, position, pageWidth, imgHeight);
+      pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, imgHeight);
 
       while (heightLeft > OVERFLOW_TOLERANCE_MM) {
         position -= pageHeight;
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, pageWidth, imgHeight);
+        pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 
