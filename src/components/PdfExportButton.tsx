@@ -19,8 +19,6 @@ export default function PdfExportButton({ fileName }: { fileName: string }) {
       const elementRect = element.getBoundingClientRect();
 
       const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#ffffff' });
-      // PNGは文字のアンチエイリアスにより圧縮効率が悪く容量が大きくなるため、JPEGで書き出す
-      const imgData = canvas.toDataURL('image/jpeg', 0.85);
 
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -52,10 +50,29 @@ export default function PdfExportButton({ fileName }: { fileName: string }) {
         breaks.push(nextBreak(breaks[breaks.length - 1]));
       }
 
-      breaks.slice(0, -1).forEach((top, i) => {
+      // ページごとに元画像から該当range分だけを切り出す（1枚の画像をずらして使い回すと
+      // 各ページが常にA4の固定高さで表示されるためページ間で内容が重複してしまう）
+      const canvasPxPerMm = canvas.width / pageWidth;
+      for (let i = 0; i < breaks.length - 1; i++) {
+        const startMm = breaks[i];
+        const endMm = breaks[i + 1];
+        const srcY = Math.round(startMm * canvasPxPerMm);
+        const srcHeight = Math.max(1, Math.round((endMm - startMm) * canvasPxPerMm));
+
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = srcHeight;
+        const ctx = pageCanvas.getContext('2d');
+        if (!ctx) continue;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+        ctx.drawImage(canvas, 0, srcY, canvas.width, srcHeight, 0, 0, canvas.width, srcHeight);
+        // PNGは文字のアンチエイリアスにより圧縮効率が悪く容量が大きくなるため、JPEGで書き出す
+        const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.85);
+
         if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, -top, pageWidth, imgHeight);
-      });
+        pdf.addImage(pageImgData, 'JPEG', 0, 0, pageWidth, endMm - startMm);
+      }
 
       pdf.save(fileName);
     } finally {
