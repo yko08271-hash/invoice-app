@@ -54,7 +54,7 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
         {company?.registration_number && <p>登録番号：{company.registration_number}</p>}
       </div>
 
-      <div className="mb-6 border-2 border-gray-800 rounded-lg px-5 py-4 text-2xl font-bold">
+      <div className="mb-6 border-2 border-gray-800 rounded-lg px-5 py-4 text-2xl font-bold" data-avoid-break="true">
         ご請求金額（税込）　<span>{formatYen(invoice.total)}</span>
       </div>
 
@@ -91,7 +91,7 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
       </table>
 
       <div className="flex justify-end mb-8">
-        <div className="w-64 text-sm space-y-1">
+        <div className="w-64 text-sm space-y-1" data-avoid-break="true">
           <div className="flex justify-between">
             <span>小計（10%対象・税抜）</span>
             <span>{formatYen(invoice.subtotal_10)}</span>
@@ -116,7 +116,7 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
       </div>
 
       {bankInfo.bank_name && (
-        <div className="mb-2 text-sm border border-gray-400 rounded-lg px-5 py-4">
+        <div className="mb-2 text-sm border border-gray-400 rounded-lg px-5 py-4" data-avoid-break="true">
           <p className="font-semibold mb-1">お振込先</p>
           <p>
             {bankInfo.bank_name} {bankInfo.branch_name} {bankInfo.account_type} {bankInfo.account_number}
