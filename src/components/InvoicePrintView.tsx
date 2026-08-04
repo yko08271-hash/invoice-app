@@ -33,6 +33,10 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
     >
       <h1 className="text-3xl font-bold tracking-widest text-center mb-8">ご請求書</h1>
 
+      <div className="mb-6 border-2 border-gray-800 rounded-lg px-5 py-4 text-2xl font-bold" data-avoid-break="true">
+        ご請求金額（税込）　<span>{formatYen(invoice.total)}</span>
+      </div>
+
       <div className="flex justify-between items-start mb-8">
         <div>
           <p className="text-lg font-semibold border-b border-gray-800 pb-1 mb-1 min-w-[220px]">
@@ -52,10 +56,6 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
         {company?.address && <p>{company.address}</p>}
         {company?.tel && <p>TEL：{company.tel}</p>}
         {company?.registration_number && <p>登録番号：{company.registration_number}</p>}
-      </div>
-
-      <div className="mb-6 border-2 border-gray-800 rounded-lg px-5 py-4 text-2xl font-bold" data-avoid-break="true">
-        ご請求金額（税込）　<span>{formatYen(invoice.total)}</span>
       </div>
 
       <table className="w-full text-sm border-collapse mb-6">
@@ -90,6 +90,17 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
         </tbody>
       </table>
 
+      {bankInfo.bank_name && (
+        <div className="mb-6 text-sm border border-gray-400 rounded-lg px-5 py-4" data-avoid-break="true">
+          <p className="font-semibold mb-1">お振込先</p>
+          <p>
+            {bankInfo.bank_name} {bankInfo.branch_name} {bankInfo.account_type} {bankInfo.account_number}
+          </p>
+          <p>{bankInfo.account_holder}</p>
+          <p className="text-xs text-gray-600 mt-2">※振込手数料は御社のご負担にてお願いいたします</p>
+        </div>
+      )}
+
       <div className="flex justify-end mb-8">
         <div className="w-64 text-sm space-y-1" data-avoid-break="true">
           <div className="flex justify-between">
@@ -114,17 +125,6 @@ export default function InvoicePrintView({ invoice, items, company }: Props) {
           </div>
         </div>
       </div>
-
-      {bankInfo.bank_name && (
-        <div className="mb-2 text-sm border border-gray-400 rounded-lg px-5 py-4" data-avoid-break="true">
-          <p className="font-semibold mb-1">お振込先</p>
-          <p>
-            {bankInfo.bank_name} {bankInfo.branch_name} {bankInfo.account_type} {bankInfo.account_number}
-          </p>
-          <p>{bankInfo.account_holder}</p>
-          <p className="text-xs text-gray-600 mt-2">※振込手数料は御社のご負担にてお願いいたします</p>
-        </div>
-      )}
 
       {invoice.due_date && <p className="text-sm mb-6">お支払期限：{invoice.due_date}</p>}
 
