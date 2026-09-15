@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { calcTotals, formatYen } from '@/lib/calc';
 import { ITEM_NAME_PRESETS, ITEM_UNITS } from '@/lib/itemPresets';
+import { useConfirmLeave } from '@/lib/useConfirmLeave';
 import type { BankAccountSlot, CompanySettings, Honorific, Invoice, InvoiceItem, ItemUnit, TaxRate } from '@/lib/types';
 
 type Props = {
@@ -47,9 +48,22 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
+  const isFirstRender = useRef(true);
 
   const totals = calcTotals(items);
   const hasSecondAccount = Boolean(company?.bank_name_2);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    setIsDirty(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoiceNumber, issueDate, dueDate, clientName, honorific, clientAddress, bankAccount, notes, items]);
+
+  useConfirmLeave(isDirty && !saving);
 
   function updateItem(index: number, patch: Partial<InvoiceItem>) {
     setItems((prev) => prev.map((it, i) => (i === index ? { ...it, ...patch } : it)));
