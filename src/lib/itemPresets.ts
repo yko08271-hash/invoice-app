@@ -15,4 +15,4 @@ export const ITEM_NAME_PRESETS = [
   'ライフジャケットレンタル',
 ];
 
-export const ITEM_UNITS = ['回', '個', '式'] as const;
+export const ITEM_UNITS = ['回', '個', '式', '日', 'SET'] as const;
