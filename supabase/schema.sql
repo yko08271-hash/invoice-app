@@ -48,7 +48,7 @@ create table if not exists invoice_items (
   detail text,
   quantity numeric(12,2) not null default 1,
   unit text not null default '回',
-  unit_price numeric(12,0) not null default 0,
+  unit_price numeric(12,2) not null default 0,
   tax_rate smallint not null check (tax_rate in (8, 10)),
   sort_order integer not null default 0
 );

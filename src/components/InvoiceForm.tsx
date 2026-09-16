@@ -340,6 +340,7 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
                     value={item.unit_price}
                     onChange={(e) => updateItem(index, { unit_price: Number(e.target.value) })}
                     min={0}
+                    step="0.01"
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
