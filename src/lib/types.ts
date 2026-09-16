@@ -1,6 +1,6 @@
 export type TaxRate = 8 | 10;
 export type Honorific = '様' | '御中';
-export type ItemUnit = '回' | '個' | '式' | '日' | 'SET';
+export type ItemUnit = '回' | '個' | '式' | '日' | 'SET' | '枚';
 export type BankAccountSlot = 1 | 2;
 
 export type InvoiceItem = {
