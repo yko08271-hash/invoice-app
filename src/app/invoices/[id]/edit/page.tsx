@@ -4,8 +4,15 @@ import AppHeader from '@/components/AppHeader';
 import InvoiceForm from '@/components/InvoiceForm';
 import type { CompanySettings, Invoice, InvoiceItem } from '@/lib/types';
 
-export default async function EditInvoicePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditInvoicePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ duplicated?: string }>;
+}) {
   const { id } = await params;
+  const { duplicated } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -34,6 +41,7 @@ export default async function EditInvoicePage({ params }: { params: Promise<{ id
           initialInvoice={invoice as Invoice}
           initialItems={(items ?? []) as InvoiceItem[]}
           company={company as CompanySettings | null}
+          justDuplicated={duplicated === '1'}
         />
       </div>
     </main>

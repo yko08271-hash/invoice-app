@@ -14,6 +14,7 @@ type Props = {
   initialItems?: InvoiceItem[];
   defaultInvoiceNumber?: string;
   company?: CompanySettings | null;
+  justDuplicated?: boolean;
 };
 
 function emptyItem(sortOrder: number): InvoiceItem {
@@ -33,8 +34,16 @@ function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, defaultInvoiceNumber, company }: Props) {
+export default function InvoiceForm({
+  invoiceId,
+  initialInvoice,
+  initialItems,
+  defaultInvoiceNumber,
+  company,
+  justDuplicated,
+}: Props) {
   const router = useRouter();
+  const [showDuplicateNotice, setShowDuplicateNotice] = useState(Boolean(justDuplicated));
   const [invoiceNumber, setInvoiceNumber] = useState(initialInvoice?.invoice_number ?? defaultInvoiceNumber ?? '');
   const [issueDate, setIssueDate] = useState(initialInvoice?.issue_date ?? todayStr());
   const [dueDate, setDueDate] = useState(initialInvoice?.due_date ?? '');
@@ -174,6 +183,22 @@ export default function InvoiceForm({ invoiceId, initialInvoice, initialItems, d
           <option key={name} value={name} />
         ))}
       </datalist>
+
+      {showDuplicateNotice && (
+        <div className="bg-amber-50 border border-amber-300 text-amber-800 rounded-lg px-4 py-3 text-sm flex justify-between items-start gap-3">
+          <p>
+            この請求書は複製されたものです。明細の日付・内容・金額をすべて見直してから保存してください。不要な明細は「削除」で消してください。
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowDuplicateNotice(false)}
+            className="text-amber-600 hover:text-amber-900 shrink-0"
+            aria-label="閉じる"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <div className="bg-white rounded-xl shadow p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>

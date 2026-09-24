@@ -86,7 +86,7 @@ export default function InvoiceList({ invoices }: { invoices: Invoice[] }) {
     }
 
     setDuplicatingId(null);
-    router.push(`/invoices/${created.id}/edit`);
+    router.push(`/invoices/${created.id}/edit?duplicated=1`);
   }
 
   if (items.length === 0) {
