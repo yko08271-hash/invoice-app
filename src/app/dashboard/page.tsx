@@ -16,7 +16,7 @@ export default async function DashboardPage() {
   const { data: invoices, error } = await supabase
     .from('invoices')
     .select('*')
-    .order('issue_date', { ascending: false });
+    .order('invoice_number', { ascending: true });
 
   return (
     <main className="min-h-screen">

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import AppHeader from '@/components/AppHeader';
 import InvoiceForm from '@/components/InvoiceForm';
+import { nextInvoiceNumber } from '@/lib/invoiceNumber';
 import type { CompanySettings } from '@/lib/types';
 
 export default async function NewInvoicePage() {
@@ -12,14 +13,7 @@ export default async function NewInvoicePage() {
 
   if (!user) redirect('/');
 
-  const year = new Date().getFullYear();
-  const { count } = await supabase
-    .from('invoices')
-    .select('id', { count: 'exact', head: true })
-    .gte('issue_date', `${year}-01-01`)
-    .lte('issue_date', `${year}-12-31`);
-
-  const defaultInvoiceNumber = `INV-${year}-${String((count ?? 0) + 1).padStart(4, '0')}`;
+  const defaultInvoiceNumber = await nextInvoiceNumber(supabase);
 
   const { data: company } = await supabase.from('company_settings').select('*').limit(1).maybeSingle();
 

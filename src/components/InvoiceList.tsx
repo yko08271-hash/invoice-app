@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { formatYen } from '@/lib/calc';
+import { compareInvoiceNumber, nextInvoiceNumber } from '@/lib/invoiceNumber';
 import type { Invoice } from '@/lib/types';
 
 export default function InvoiceList({ invoices }: { invoices: Invoice[] }) {
@@ -16,8 +17,9 @@ export default function InvoiceList({ invoices }: { invoices: Invoice[] }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter(
+    const sorted = [...items].sort((a, b) => compareInvoiceNumber(a.invoice_number, b.invoice_number));
+    if (!q) return sorted;
+    return sorted.filter(
       (inv) => inv.invoice_number.toLowerCase().includes(q) || inv.client_name.toLowerCase().includes(q)
     );
   }, [items, query]);
@@ -59,7 +61,7 @@ export default function InvoiceList({ invoices }: { invoices: Invoice[] }) {
     }
 
     const { id: _origId, created_at: _createdAt, ...rest } = original;
-    const newInvoicePayload = { ...rest, invoice_number: `${original.invoice_number}-copy` };
+    const newInvoicePayload = { ...rest, invoice_number: await nextInvoiceNumber(supabase) };
 
     const { data: created, error: insertError } = await supabase
       .from('invoices')
